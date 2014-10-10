@@ -60,7 +60,26 @@ quotient int divisor
 	| int < divisor = 0
 	| otherwise     = quotient (int - divisor) divisor + 1
 
+fib :: Int -> Int
+-- Returns the nth Fibonacci number
+fib n
+	| n <= 1 = n
+	| otherwise = fib (n-1) + fib (n-2)
 
+testFib :: Int -> [Int]
+-- Returns a list containing the first n Fibonacci numbers
+testFib n
+	= [fib x | x <- [0..n]]
+
+gRatio :: Int -> Float -> Float
+-- Returns the an approximation of the Golden Ratio
+-- which satisfies a threshhold value e
+gRatio n e
+	| abs (fN1fN - fN2fN1) < e = fN2fN1
+	| otherwise                = gRatio (n+1) e
+		where
+			fN1fN  = fromIntegral (fib (n+1)) / fromIntegral (fib n)
+			fN2fN1 = fromIntegral (fib (n+2)) / fromIntegral (fib (n+1))	 
 
 
 
