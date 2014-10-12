@@ -79,8 +79,35 @@ gRatio n e
 	| otherwise                = gRatio (n+1) e
 		where
 			fN1fN  = fromIntegral (fib (n+1)) / fromIntegral (fib n)
-			fN2fN1 = fromIntegral (fib (n+2)) / fromIntegral (fib (n+1))	 
+			fN2fN1 = fromIntegral (fib (n+2)) / fromIntegral (fib (n+1))
+	 
+binary :: Int -> Int
+-- Returns a binary representation of an integer in decimal representation
+binary d
+	| d < 2     = d
+	| otherwise = (binary (div d 2))*10 + mod d 2
 
+newbase :: Int -> Int -> Int
+-- Returns an integer in the representation of a new base
+-- Pre: base <= 10
+newbase num base
+  | num < base = num
+  | otherwise  = (newbase (div num base) base)*10 + mod num base
+
+add2, larger :: Int -> Int -> Int
+-- Returns the sum of 2 non-negative numbers
+-- using only pred and succ
+add2 x y
+  | x == 0    = y
+  | otherwise = add2 (pred x) (succ y)
+
+-- Returns the larger of 2 positive integers using recursion
+-- INCOMPLETE
+larger x y
+  | x == 0    = y
+  | otherwise = larger (pred x) (succ y) - 1 
+
+ 
 
 
 
