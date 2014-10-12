@@ -102,14 +102,24 @@ add2 x y
   | otherwise = add2 (pred x) (succ y)
 
 -- Returns the larger of 2 positive integers using recursion
--- INCOMPLETE
 larger x y
   | x == 0    = y
-  | otherwise = larger (pred x) (succ y) - 1 
+  | y == 0    = x
+  | otherwise = larger (pred x) (pred y) + 1
 
- 
+chop :: Int -> (Int, Int)
+-- Returns a tuple which contains the first (n-1) digits and the last digit
+-- of an integer separately
+chop n
+  | n < 10    = (0, n)
+  | otherwise = (fst (chop (n-10)) + 1, snd (chop (n-10)))
 
-
+concatenate :: Int -> Int -> Int
+-- Concatenates the digits of 2 non-zero integers
+-- INCOMPLETE
+concatenate x y
+  | y < 10 = (x * 10) + y
+  | otherwise = concatenate x (chop y)
 
 
 
