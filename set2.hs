@@ -112,15 +112,13 @@ chop :: Int -> (Int, Int)
 -- of an integer separately
 chop n
   | n < 10    = (0, n)
-  | otherwise = (fst (chop (n-10)) + 1, snd (chop (n-10)))
+  | otherwise = (a + 1, b)
+		where
+			(a, b) = chop (n-10)
 
 concatenate :: Int -> Int -> Int
 -- Concatenates the digits of 2 non-zero integers
 -- INCOMPLETE
 concatenate x y
   | y < 10 = (x * 10) + y
-  | otherwise = concatenate x (chop y)
-
-
-
-
+  | otherwise = concatenate x (fst (chop y))
