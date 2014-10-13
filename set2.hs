@@ -62,9 +62,12 @@ quotient int divisor
 
 fib :: Int -> Int
 -- Returns the nth Fibonacci number
-fib n
-	| n <= 1 = n
-	| otherwise = fib (n-1) + fib (n-2)
+fib n = fib' 0 1 0
+	where
+		fib' :: Int -> Int -> Int -> Int
+		fib' x x1 k
+			| k == n    = x
+			| otherwise = fib' x1 (x+x1) (k+1)
 
 testFib :: Int -> [Int]
 -- Returns a list containing the first n Fibonacci numbers
@@ -120,5 +123,10 @@ concatenate :: Int -> Int -> Int
 -- Concatenates the digits of 2 non-zero integers
 -- INCOMPLETE
 concatenate x y
-  | y < 10 = (x * 10) + y
-  | otherwise = concatenate x (fst (chop y))
+  | y == 0    = x
+  | otherwise = (concatenate x a)*10 + b
+		where
+			(a, b) = chop y 
+
+
+
