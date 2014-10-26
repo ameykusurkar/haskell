@@ -47,7 +47,30 @@ f5 points = [ (a, b, c, d, e, f) | (a, b, c, d, e, f) <- points, (above b e) /= 
 -- cordToList :: (Cord, Cord, Cord, Cord, Cord, Cord) -> [Cord]
 -- cordToList (a, b, c, d, e, f) = [a, b, c, d, e, f]
 
+--------------------------------------------------------------------------------------
 
+notCompute :: CordSet
+-- Gives a list of grids for which all the conditions are False.
+notCompute =  comp all6
+  where
+    all6 = [ (a, b, c, d, e, f) | a <- allPoints, b <- allPoints, c <- allPoints, d <- allPoints, e <- allPoints, f <- allPoints, (a/=b) && (a/=c) && (a/=d) && (a/=e) && (a/=f) && (b/=c) && (b/=d) && (b/=e) && (b/=f) && (c/=d) && (c/=e) && (c/=f) && (d/=e) && (d/=f) && (e/=f) ] 
+    allPoints = [(x, y) | x <- [0..2], y <- [0..2] ]
+    -- uniquePoints = (a/=b) && (a/=c) && (a/=d) && (a/=e) && (a/=f) && (b/=c) && (b/=d) && (b/=e) && (b/=f) && (c/=d) && (c/=e) && (c/=f) && (d/=e) && (d/=f) && (e/=f) 
+   
+    comp :: CordSet -> CordSet
+    comp set = notf5 (notf4 (notf3 (notf2 (notf1 set))))
+
+-- f1, f2, f3, f4, f5 :: CordSet -> CordSet
+
+notf1 points = [ (a, b, c, d, e, f) | (a, b, c, d, e, f) <- points, (sees a b) /= (sees b c) ]
+
+notf2 points = [ (a, b, c, d, e, f) | (a, b, c, d, e, f) <- points, not (nextTo b d) || (nextTo b e) ]
+
+notf3 points = [ (a, b, c, d, e, f) | (a, b, c, d, e, f) <- points, (leftOf a f) && (above f a) ]
+
+notf4 points = [ (a, b, c, d, e, f) | (a, b, c, d, e, f) <- points, (sees a e) && (leftOf e d) && (nextTo d c) ]
+
+notf5 points = [ (a, b, c, d, e, f) | (a, b, c, d, e, f) <- points, (above b e) && (nextTo b c) && (sees e d) ]
 
 
 
