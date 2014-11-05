@@ -34,9 +34,9 @@ score :: Colours -> Colours -> Result
 -- Returns the score of a guess compared to the secret code,
 -- in the format ( guess, (blacks, whites) )
 score g s = ( g, (b, w) )
-  where 
-  	b = blacks g s
-  	w = length s - length (g \\ s) - (blacks g s)
+  where 	
+    b = blacks g s
+    w = length s - length (g \\ s) - b
 
 allGuesses :: Int -> [Colours]
 -- Returns a list of all possible guesses of length n
