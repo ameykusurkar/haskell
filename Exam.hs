@@ -63,6 +63,7 @@ sortRequests = (map swap) . sort . (map swap)
 schedule :: [Request] -> [Request]
 -- Returns the longest sequence of non-overlapping requests.
 -- List needs to be reversed as stack accumulates in reverse order.
+schdule  []   = []
 schedule reqs = reverse (sch rs [r])
   where
    (r:rs) = sortRequests reqs 
