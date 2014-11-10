@@ -60,6 +60,12 @@ sortRequests = (map swap) . sort . (map swap)
   where
     swap (a, b, c, d) = (d, b, c, a)
 
+{-
+sortRequests = swap . sort . swap
+  where
+    map ( \(a, b, c, d) ) -> ( (d, b, c, a) )
+-}
+
 schedule :: [Request] -> [Request]
 -- Returns the longest sequence of non-overlapping requests.
 -- List needs to be reversed as stack accumulates in reverse order.
