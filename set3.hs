@@ -123,9 +123,25 @@ qsort (i:is) = (qsort lesser) ++ [i] ++ (qsort greater)
 
 perms :: Eq a => [a] -> [[a]]
 -- Returns a list of all the permutations of a list
-perms list = [ list \\ [l] | l <- list ]
+perms []    = [[]]
+perms ls = [ x:ls' | x <- ls , ls' <- perms (ls \\ [x]) ]
+ 
 
+--routes :: [(Int, Int)] -> Int -> Int -> [[Int]]
+-- Returns a list of all possible routes between 2 points
 
+{-
+-outes nodes s f = if s==f then [] else [ routes nodes s st | r@((st:rs'):rs) <- routeEnd ]
+  where routeEnd = [ [x, y] | (x, y) <- nodes, y == f ]
 
+routes nodes s f
+  | s == f    = []
+  | otherwise = [ routes nodes s x | (x:xs) -> routes s x ]
+    where
+      routeEnd = [ [x, y] | (x, y) <- nodes, y == f ]
+      x = 
 
-
+routes nodes s f = routeFind [[f]]
+  where
+    routeFind pp = [  | (p:ps) <- pp ] 
+-}
