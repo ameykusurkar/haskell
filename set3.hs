@@ -127,21 +127,65 @@ perms []    = [[]]
 perms ls = [ x:ls' | x <- ls , ls' <- perms (ls \\ [x]) ]
  
 
---routes :: [(Int, Int)] -> Int -> Int -> [[Int]]
--- Returns a list of all possible routes between 2 points
-
-{-
--outes nodes s f = if s==f then [] else [ routes nodes s st | r@((st:rs'):rs) <- routeEnd ]
-  where routeEnd = [ [x, y] | (x, y) <- nodes, y == f ]
-
+testroutes = routes [(1,2),(1,3),(2,4),(3,5),(5,6),(3,6)] 1 6
+routes :: [(Int, Int)] -> Int -> Int -> [[Int]]
+-- Returns a list of possible routes between 2 points
 routes nodes s f
-  | s == f    = []
-  | otherwise = [ routes nodes s x | (x:xs) -> routes s x ]
-    where
-      routeEnd = [ [x, y] | (x, y) <- nodes, y == f ]
-      x = 
-
-routes nodes s f = routeFind [[f]]
+  = if   s == f then [[s]] 
+    else [ s:r | n <- routeFinder, r <- routes nodes n f]
   where
-    routeFind pp = [  | (p:ps) <- pp ] 
--}
+    routeFinder  = [ y | (x, y) <- nodes, x == s ]
+
+ 
+mergeN :: [[Int]] -> [Int]
+-- Combines a list of ordered lists
+mergeN = foldr merge2 []
+
+
+same :: [Int] -> Bool
+-- Returns True iff all elements in list are same
+same ns = and ( zipWith (==) ns (tail ns) )
+
+
+-- Infinite list of factorials
+facs = scanl (*) 1 [2..]
+-- e = 1 + sum (map (1/) (take 10 facs))
+
+
+myScanl, myScanl2 :: (b -> a -> b) -> b -> [a] -> [b] 
+myScanl f st xs = scanl' st xs
+  where
+    scanl' st []     = [st]
+    scanl' st (x:xs) = st:(scanl' (f st x) xs)
+
+myScanl2 f st xs
+  = [ foldl f st (take n xs) | n <- [1..length xs] ]
+
+
+squash :: (a -> a -> b) -> [a] -> [b]
+-- Applies a function to adjacent elements in a list
+squash f xs = zipWith f (tail xs) xs
+
+
+pipeline :: [(a -> a)] -> ([a] -> [a])
+-- Pipelines a list of single argument functions
+pipeline = map . foldr (.) id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
