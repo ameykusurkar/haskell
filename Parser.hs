@@ -2,6 +2,8 @@ module Parser where
 
 import Data.Char
 
+import Data.Maybe
+
 type Operator = Char
 
 data Expr = Num Int | Var String | Op Operator | App Expr Expr Expr
@@ -47,17 +49,31 @@ showExpr (App op e e')
 
 
 -------------------------------------------------------------------
---precedence :: Operator -> Precedence
+precedence :: Operator -> Precedence
+-- Returns the Precedence of an operator
+precedence op = p
+  where (p, a) = fromJust (lookup op opTable)
  
---associativity :: Operator -> Associativity
+associativity :: Operator -> Associativity
+-- Returns the Associativity of an operator
+associativity op = a
+  where (p, a) = fromJust (lookup op opTable)
 
---higherPrecedence :: Operator -> Operator -> Bool
+higherPrecedence :: Operator -> Operator -> Bool
+higherPrecedence op1 op2
+  = precedence op1 > precedence op2
 
---eqPrecedence :: Operator -> Operator -> Bool
+eqPrecedence :: Operator -> Operator -> Bool
+eqPrecedence op1 op2
+  = precedence op1 == precedence op2
 
---isRightAssociative :: Operator -> Bool
+isRightAssociative :: Operator -> Bool
+isRightAssociative op
+  = associativity op == R
 
---supersedes :: Operator -> Operator -> Bool
+supersedes :: Operator -> Operator -> Bool
+supersedes op1 op2
+  = higherPrecedence op1 op2 || eqPrecedence op1 op2 && isRightAssociative op1
 
 --stringToInt :: String -> Int
 
