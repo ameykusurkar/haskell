@@ -75,7 +75,12 @@ supersedes :: Operator -> Operator -> Bool
 supersedes op1 op2
   = higherPrecedence op1 op2 || eqPrecedence op1 op2 && isRightAssociative op1
 
---stringToInt :: String -> Int
+stringToInt :: String -> Int
+stringToInt str = strToInt (reverse str)
+  where
+    -- ord '0' = 48
+    strToInt []     = 0
+    strToInt (s:ss) = (ord s - 48) + (strToInt ss) * 10
 
 --buildExpr :: String -> Expr
 
