@@ -157,12 +157,13 @@ instance Eq Time where
   (==) = equaltime
 
 instance Show Time where
-  show (HR24 h m)
-    | h < 10    = "0" ++ show (h*100 + m) ++ "HRS"
-    | otherwise = show (h*100 + m) ++ "HRS"
+  show (HR24 h m)    = showDig h ++ showDig m ++ "HRS"
   show (HM 12 00 PM) = "Midday"
   show (HM 12 00 AM) = "Midnight"
-  show (HM h  m  ap) = undefined
+  show (HM h  m  ap) = showDig h ++ ":" ++ showDig m ++ show ap
+
+showDig x 
+  = if x < 10 then '0':(show x) else show x
 
 data AmPm = AM | PM
   deriving (Eq, Ord, Show)
@@ -183,11 +184,22 @@ equaltime t t' = h == h' && m == m'
   	HR24 h' m' = to24 t'
 
 
+----- Qn17-19 ----- 
+
+-- a: Leaf value type, b: Node value type
+data Tree3 a b = Empty | Leaf3 a | Node3 (Tree3 a b) b (Tree3 a b)
+
+map3 :: (a -> c) -> (b -> d) -> Tree3 a b -> Tree3 c d
+map3 _  _  Empty         = Empty
+map3 fa _  (Leaf3 x)     = Leaf3 (fa x)
+map3 fa fb (Node3 l x r) = Node3 (map3 fa fb l) (fb x) (map3 fa fb r)
+
+-- Qn 19 remaining
 
 
 
 
-
+-------------------
 
 
 
