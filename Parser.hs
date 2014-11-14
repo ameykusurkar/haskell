@@ -52,12 +52,12 @@ showExpr (App op e e')
 precedence :: Operator -> Precedence
 -- Returns the Precedence of an operator
 precedence op = p
-  where (p, a) = fromJust (lookup op opTable)
+  where (p, _) = fromJust (lookup op opTable)
  
 associativity :: Operator -> Associativity
 -- Returns the Associativity of an operator
 associativity op = a
-  where (p, a) = fromJust (lookup op opTable)
+  where (_, a) = fromJust (lookup op opTable)
 
 higherPrecedence :: Operator -> Operator -> Bool
 higherPrecedence op1 op2
@@ -75,18 +75,46 @@ supersedes :: Operator -> Operator -> Bool
 supersedes op1 op2
   = higherPrecedence op1 op2 || eqPrecedence op1 op2 && isRightAssociative op1
 
+
 stringToInt :: String -> Int
-stringToInt str = strToInt (reverse str)
-  where
-    -- ord '0' = 48
-    strToInt []     = 0
-    strToInt (s:ss) = (ord s - 48) + (strToInt ss) * 10
+stringToInt = foldl1 (\a b -> a*10 + b) . map digitToInt
 
---buildExpr :: String -> Expr
+buildExpr :: String -> Expr
+buildExpr s
+  = parse (tokenise s) ([], ['$'])
 
---tokenise :: String -> [Token]
+tokenise :: String -> [Token]
+tokenise [] = []
+tokenise (s:ss)
+  | isSpace s  = tokenise ss
+  | elem s ops = (Op s):(tokenise ss)
+  | otherwise  = expr:(tokenise rest)
+    where 
+      ( str@(s':ss'), rest ) = break (not.isAlphaNum) (s:ss)
+      expr = if isDigit s' then Num (stringToInt str) else Var str
 
---buildOpApp :: (ExprStack, OpStack) -> (ExprStack, OpStack)
+buildOpApp :: (ExprStack, OpStack) -> (ExprStack, OpStack)
+buildOpApp ((n : n' : es), (o : os))
+  = (App (Op o) n' n : es, os)
 
---parse :: [Token] -> (ExprStack, OpStack) -> Expr
+parse :: [Token] -> (ExprStack, OpStack) -> Expr
+parse [] ([e], _)     = e
+parse [] stack        = parse [] (buildOpApp stack)
+parse ((Op op):ts) ( es, (o:os) )
+  | supersedes op o = parse ts ( es, (op:o:os) )
+  | otherwise       = parse ts ( buildOpApp (es, (op:o:os)) )
+parse (t:ts) (es, os) = parse ts ( (t:es), os )
+
+
+
+
+
+
+
+
+
+
+
+
+
 
